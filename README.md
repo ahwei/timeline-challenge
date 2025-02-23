@@ -34,18 +34,18 @@ Implement interactive features for a Timeline component. We will provide a basic
 
 https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 
-- [ ] The displayed value updates immediately while typing, but `onChange` is not triggered until input is confirmed
-- [ ] Clicking outside the input field removes focus and changes the value
-- [ ] Clicking on the native step buttons immediately changes the value
-- [ ] Pressing up arrow or down arrow keys immediately changes the value
+- [-] The displayed value updates immediately while typing, but `onChange` is not triggered until input is confirmed
+- [-] Clicking outside the input field removes focus and changes the value
+- [-] Clicking on the native step buttons immediately changes the value
+- [-] Pressing up arrow or down arrow keys immediately changes the value
 - [ ] Entire text is selected when the input field gains focus
 - [ ] Entire text is selected after using the native step buttons
 - [ ] Entire text is selected after using the up arrow or down arrow keys
-- [ ] Pressing Enter confirms the new value and removes focus
-- [ ] Pressing Escape reverts to the original value and removes focus
+- [-] Pressing Enter confirms the new value and removes focus
+- [-] Pressing Escape reverts to the original value and removes focus
 - [ ] Leading zeros are automatically removed
 - [ ] Negative values are automatically adjusted to the minimum allowed value
-- [ ] Decimal values are automatically rounded to the nearest integer
+- [-] Decimal values are automatically rounded to the nearest integer
 - [ ] Invalid inputs (non-numeric) revert to the previous valid value
 
 ### 2. Play Controls Behavior
@@ -102,7 +102,6 @@ https://github.com/user-attachments/assets/3940cd0d-dd9d-4331-9172-592462ad65d3
 ## Important Notes
 
 ⚠️ **Warning**: Do not change any `data-testid` attribute names in the provided components. These are used for automated assessment of your assignment. Modifying these names may result in failing the assessment criteria.
-
 
 ## Submission
 
