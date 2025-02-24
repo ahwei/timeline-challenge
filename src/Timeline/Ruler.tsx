@@ -1,6 +1,43 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTimeline } from "./TimelineContext";
+
 export const Ruler = () => {
-  const { maxDuration } = useTimeline();
+  const { maxDuration, updateTime } = useTimeline();
+  const [isDragging, setIsDragging] = useState(false);
+  const rulerRef = useRef<HTMLDivElement>(null);
+
+  const handleTimeUpdate = useCallback(
+    (clientX: number) => {
+      if (!rulerRef.current) return;
+      const rect = rulerRef.current.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const newTime = Math.max(0, Math.min(x, maxDuration));
+      updateTime(String(newTime));
+    },
+    [maxDuration, updateTime],
+  );
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        handleTimeUpdate(e.clientX);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging, handleTimeUpdate]);
 
   return (
     <div
@@ -10,8 +47,11 @@ export const Ruler = () => {
       data-testid="ruler"
     >
       <div
-        className={`w-[${maxDuration}px] h-6 rounded-md bg-white/25`}
+        ref={rulerRef}
+        className={`w-[${maxDuration}px] h-6 rounded-md bg-white/25 cursor-pointer`}
         data-testid="ruler-bar"
+        onClick={(e) => handleTimeUpdate(e.clientX)}
+        onMouseDown={() => setIsDragging(true)}
       ></div>
     </div>
   );

@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import { MAX_VALUE, MIN_VALUE, STEP } from "./constants";
-import { useTimeline } from "./TimelineContext";
+import { MAX_VALUE, MIN_VALUE, STEP, useTimeline } from "./TimelineContext";
 
 type PlayControlsProps = {
   maxValue?: number;
