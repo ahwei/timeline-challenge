@@ -72,7 +72,7 @@ https://github.com/user-attachments/assets/42190ade-f708-45a1-8168-2be779c66390
 
 https://github.com/user-attachments/assets/94b5e2c8-ef32-488e-97e4-d53036bbf2f7
 
-- [ ] Vertical scrolling of the Track List is synchronized with the Keyframe List
+- [x] Vertical scrolling of the Track List is synchronized with the Keyframe List
 
 ### 5. Keyframe List Behavior
 

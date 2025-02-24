@@ -8,6 +8,9 @@ export const KeyframeList = () => {
     if (scrollRefs.ruler.current) {
       scrollRefs.ruler.current.scrollLeft = e.currentTarget.scrollLeft;
     }
+    if (scrollRefs.trackList.current) {
+      scrollRefs.trackList.current.scrollTop = e.currentTarget.scrollTop;
+    }
   };
 
   return (
