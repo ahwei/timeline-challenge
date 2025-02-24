@@ -30,12 +30,14 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
       const inputType = (e.nativeEvent as InputEvent).inputType;
 
       if (inputType === "stepUp" || inputType === "stepDown") {
+        e.target.select();
         setLocalTime(newValue);
         onUpdateOriginTime(newValue);
         return;
       }
 
       if (inputType !== "deleteContentBackward" && inputType !== "insertText") {
+        e.target.select();
         setLocalTime(newValue);
         onUpdateOriginTime(newValue);
         return;
@@ -49,6 +51,10 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
   const handleBlur = useCallback(() => {
     setLocalTime(time);
   }, [setTime, time]);
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
+  };
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -89,6 +95,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
         />
       </fieldset>
       -

@@ -34,18 +34,18 @@ Implement interactive features for a Timeline component. We will provide a basic
 
 https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 
-- [-] The displayed value updates immediately while typing, but `onChange` is not triggered until input is confirmed
-- [-] Clicking outside the input field removes focus and changes the value
-- [-] Clicking on the native step buttons immediately changes the value
-- [-] Pressing up arrow or down arrow keys immediately changes the value
-- [ ] Entire text is selected when the input field gains focus
-- [ ] Entire text is selected after using the native step buttons
-- [ ] Entire text is selected after using the up arrow or down arrow keys
-- [-] Pressing Enter confirms the new value and removes focus
-- [-] Pressing Escape reverts to the original value and removes focus
+- [x] The displayed value updates immediately while typing, but `onChange` is not triggered until input is confirmed
+- [x] Clicking outside the input field removes focus and changes the value
+- [x] Clicking on the native step buttons immediately changes the value
+- [x] Pressing up arrow or down arrow keys immediately changes the value
+- [x] Entire text is selected when the input field gains focus
+- [x] Entire text is selected after using the native step buttons
+- [x] Entire text is selected after using the up arrow or down arrow keys
+- [x] Pressing Enter confirms the new value and removes focus
+- [x] Pressing Escape reverts to the original value and removes focus
 - [ ] Leading zeros are automatically removed
 - [ ] Negative values are automatically adjusted to the minimum allowed value
-- [-] Decimal values are automatically rounded to the nearest integer
+- [x] Decimal values are automatically rounded to the nearest integer
 - [ ] Invalid inputs (non-numeric) revert to the previous valid value
 
 ### 2. Play Controls Behavior
