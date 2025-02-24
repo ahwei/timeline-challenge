@@ -1,4 +1,8 @@
-export const Ruler = () => {
+interface RulerState {
+  maxDuration: number;
+}
+
+export const Ruler = ({ maxDuration }: RulerState) => {
   // TODO: implement mousedown and mousemove to update time and Playhead position
 
   return (
@@ -8,7 +12,10 @@ export const Ruler = () => {
       overflow-x-auto overflow-y-hidden"
       data-testid="ruler"
     >
-      <div className="w-[2000px] h-6 rounded-md bg-white/25" data-testid="ruler-bar"></div>
+      <div
+        className={`w-[${maxDuration}px] h-6 rounded-md bg-white/25`}
+        data-testid="ruler-bar"
+      ></div>
     </div>
   );
 };

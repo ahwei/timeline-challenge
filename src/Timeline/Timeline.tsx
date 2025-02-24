@@ -87,7 +87,7 @@ export const Timeline = () => {
         onUpdateTime={onUpdateTime}
         onUpdateMaxDuration={onUpdateMaxDuration}
       />
-      <Ruler />
+      <Ruler maxDuration={state.maxDuration} />
       <TrackList />
       <KeyframeList />
       <Playhead time={state.currentTime} />
