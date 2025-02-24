@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTimeline } from "./TimelineContext";
 
 export const Ruler = () => {
-  const { maxDuration, updateTime } = useTimeline();
+  const { maxDuration, updateTime, scrollRefs } = useTimeline();
   const [isDragging, setIsDragging] = useState(false);
   const rulerRef = useRef<HTMLDivElement>(null);
 
@@ -16,6 +16,12 @@ export const Ruler = () => {
     },
     [maxDuration, updateTime],
   );
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (scrollRefs.keyframeList.current) {
+      scrollRefs.keyframeList.current.scrollLeft = e.currentTarget.scrollLeft;
+    }
+  };
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -41,10 +47,12 @@ export const Ruler = () => {
 
   return (
     <div
+      ref={scrollRefs.ruler}
       className="px-4 py-2 min-w-0 
       border-b border-solid border-gray-700 
       overflow-x-auto overflow-y-hidden"
       data-testid="ruler"
+      onScroll={handleScroll}
     >
       <div
         ref={rulerRef}

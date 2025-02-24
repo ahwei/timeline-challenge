@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useContext,
   useReducer,
+  useRef,
 } from "react";
 
 export const MAX_VALUE = 6000;
@@ -25,6 +26,10 @@ interface TimelineContextType {
   dispatch: React.Dispatch<TimelineAction>;
   updateTime: (newValue: string) => void;
   updateMaxDuration: (newValue: string) => void;
+  scrollRefs: {
+    ruler: React.RefObject<HTMLDivElement>;
+    keyframeList: React.RefObject<HTMLDivElement>;
+  };
 }
 
 const TimelineContext = createContext<TimelineContextType | undefined>(
@@ -92,6 +97,9 @@ export const TimelineProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  const rulerRef = useRef<HTMLDivElement>(null);
+  const keyframeListRef = useRef<HTMLDivElement>(null);
+
   return (
     <TimelineContext.Provider
       value={{
@@ -100,6 +108,10 @@ export const TimelineProvider = ({ children }: { children: ReactNode }) => {
         dispatch,
         updateTime,
         updateMaxDuration,
+        scrollRefs: {
+          ruler: rulerRef,
+          keyframeList: keyframeListRef,
+        },
       }}
     >
       {children}
