@@ -44,7 +44,7 @@ https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 - [x] Pressing Enter confirms the new value and removes focus
 - [x] Pressing Escape reverts to the original value and removes focus
 - [x] Leading zeros are automatically removed
-- [ ] Negative values are automatically adjusted to the minimum allowed value
+- [x] Negative values are automatically adjusted to the minimum allowed value
 - [x] Decimal values are automatically rounded to the nearest integer
 - [x] Invalid inputs (non-numeric) revert to the previous valid value
 

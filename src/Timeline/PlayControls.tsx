@@ -6,11 +6,12 @@ type PlayControlsProps = {
 };
 
 const MAX_VALUE = 2000;
+const MIN_VALUE = 0;
 const STEP = 10;
 
 const onUpdateValue = (newValue: number, maxValue = MAX_VALUE) => {
   if (newValue > maxValue) return MAX_VALUE;
-  if (newValue < 0) return 0;
+  if (newValue < MIN_VALUE) return MIN_VALUE;
   return newValue;
 };
 
@@ -88,7 +89,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
           className="bg-gray-700 px-1 rounded focus:text-red-500"
           type="number"
           data-testid="current-time-input"
-          min={0}
+          min={MIN_VALUE}
           max={MAX_VALUE}
           step={STEP}
           value={localTime}
