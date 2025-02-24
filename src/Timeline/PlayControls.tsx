@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 type PlayControlsProps = {
   time: number;
@@ -27,6 +27,7 @@ export const PlayControls = ({
 }: PlayControlsProps) => {
   const currentTimeInputRef = useRef<HTMLInputElement>(null);
   const durationInputRef = useRef<HTMLInputElement>(null);
+  const [localMax, setLocalMax] = useState(2000);
 
   const onUpdateTimeValue = useCallback(onUpdateValue(maxValue, minValue), [
     maxValue,
@@ -47,13 +48,10 @@ export const PlayControls = ({
     (newValue: string) => {
       const parsed = Number(newValue);
       if (!isNaN(parsed)) {
-        const validated = onUpdateTimeValue(Math.round(parsed));
-        if (durationInputRef.current) {
-          durationInputRef.current.value = String(validated);
-        }
+        setLocalMax(onUpdateTimeValue(Math.round(parsed)));
       }
     },
-    [onUpdateTimeValue],
+    [onUpdateTimeValue, setLocalMax],
   );
 
   const handleKeyDown = useCallback(
@@ -76,6 +74,29 @@ export const PlayControls = ({
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
   };
+
+  const handleChange = useCallback(
+    (
+      e: React.ChangeEvent<HTMLInputElement>,
+      updateFn: (value: string) => void,
+    ) => {
+      const newValue = e.target.value;
+      const inputType = (e.nativeEvent as InputEvent).inputType;
+
+      if (inputType === "stepUp" || inputType === "stepDown") {
+        e.target.select();
+        updateFn(newValue);
+        return;
+      }
+
+      if (inputType !== "deleteContentBackward" && inputType !== "insertText") {
+        e.target.select();
+        updateFn(newValue);
+        return;
+      }
+    },
+    [time, onUpdateOriginTime],
+  );
 
   useEffect(() => {
     if (currentTimeInputRef.current) {
@@ -105,8 +126,14 @@ export const PlayControls = ({
           max={maxValue}
           step={STEP}
           defaultValue={time}
+          onChange={(e) => handleChange(e, onUpdateOriginTime)}
           onKeyDown={(e) => handleKeyDown(e, onUpdateOriginTime, String(time))}
           onFocus={handleFocus}
+          onBlur={() => {
+            if (currentTimeInputRef.current) {
+              currentTimeInputRef.current.value = String(time);
+            }
+          }}
         />
       </fieldset>
       -
@@ -119,9 +146,15 @@ export const PlayControls = ({
           min={100}
           max={maxValue}
           step={STEP}
-          defaultValue={maxValue}
+          defaultValue={localMax}
           onKeyDown={(e) => handleKeyDown(e, onUpdateMaxTime, String(maxValue))}
+          onChange={(e) => handleChange(e, onUpdateMaxTime)}
           onFocus={handleFocus}
+          onBlur={() => {
+            if (durationInputRef.current) {
+              durationInputRef.current.value = String(maxValue);
+            }
+          }}
         />
         Duration
       </fieldset>
