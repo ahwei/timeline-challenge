@@ -56,7 +56,8 @@ export const Ruler = () => {
     >
       <div
         ref={rulerRef}
-        className={`w-[${maxDuration}px] h-6 rounded-md bg-white/25 cursor-pointer`}
+        style={{ width: `${maxDuration}px` }}
+        className="h-6 rounded-md bg-white/25 cursor-pointer"
         data-testid="ruler-bar"
         onClick={(e) => handleTimeUpdate(e.clientX)}
         onMouseDown={() => setIsDragging(true)}
