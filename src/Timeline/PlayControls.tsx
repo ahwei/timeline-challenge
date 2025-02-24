@@ -15,18 +15,22 @@ const onUpdateValue = (newValue: number, maxValue = MAX_VALUE) => {
 };
 
 export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
-  const [localTime, setLocalTime] = useState(0);
+  const [localTime, setLocalTime] = useState<any>(0);
 
   const onUpdateOriginTime = useCallback(
-    (newValue: number) => {
-      setTime(Math.round(newValue));
+    (newValue: any) => {
+      if (!isNaN(Number(newValue))) {
+        setTime(onUpdateValue(Math.round(newValue)));
+      } else {
+        setLocalTime(time);
+      }
     },
     [setTime],
   );
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = onUpdateValue(Number(e.target.value));
+      const newValue = e.target.value;
       const inputType = (e.nativeEvent as InputEvent).inputType;
 
       if (inputType === "stepUp" || inputType === "stepDown") {
@@ -59,11 +63,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
-        if (!isNaN(Number(localTime))) {
-          onUpdateOriginTime(Number(localTime));
-        } else {
-          setLocalTime(time);
-        }
+        onUpdateOriginTime(localTime);
         e.currentTarget.blur();
       } else if (e.key === "Escape") {
         setLocalTime(time);
