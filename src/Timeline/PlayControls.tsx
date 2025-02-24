@@ -47,7 +47,15 @@ export const PlayControls = ({
 
       const parsed = Number(newValue);
       if (!isNaN(parsed)) {
-        setLocalMax(onUpdateTimeValue(Math.round(parsed)));
+        const newMax = onUpdateTimeValue(Math.round(parsed));
+        setLocalMax(newMax);
+
+        if (time > newMax) {
+          setTime(newMax);
+          if (currentTimeInputRef.current) {
+            currentTimeInputRef.current.value = String(time);
+          }
+        }
       }
     },
     [setLocalMax, maxValue],
@@ -102,6 +110,12 @@ export const PlayControls = ({
       currentTimeInputRef.current.value = String(time);
     }
   }, [time]);
+
+  useEffect(() => {
+    if (durationInputRef.current) {
+      durationInputRef.current.value = String(localMax);
+    }
+  }, [localMax]);
 
   return (
     <div
