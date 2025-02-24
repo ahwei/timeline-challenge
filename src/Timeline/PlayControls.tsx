@@ -11,7 +11,7 @@ const MAX_VALUE = 6000;
 const MIN_VALUE = 0;
 const STEP = 10;
 
-const onUpdateValue = (maxValue: number, minValue: number) => {
+const onUpdateValue = (minValue: number, maxValue: number) => {
   return (newValue: number) => {
     if (newValue > maxValue) return maxValue;
     if (newValue < minValue) return minValue;
@@ -29,29 +29,28 @@ export const PlayControls = ({
   const durationInputRef = useRef<HTMLInputElement>(null);
   const [localMax, setLocalMax] = useState(2000);
 
-  const onUpdateTimeValue = useCallback(onUpdateValue(maxValue, minValue), [
-    maxValue,
-    minValue,
-  ]);
-
   const onUpdateOriginTime = useCallback(
     (newValue: string) => {
       const parsed = Number(newValue);
+      const onUpdateTimeValue = onUpdateValue(minValue, localMax);
+
       if (!isNaN(parsed)) {
         setTime(onUpdateTimeValue(Math.round(parsed)));
       }
     },
-    [setTime, onUpdateTimeValue],
+    [setTime, localMax, minValue],
   );
 
   const onUpdateMaxTime = useCallback(
     (newValue: string) => {
+      const onUpdateTimeValue = onUpdateValue(100, maxValue);
+
       const parsed = Number(newValue);
       if (!isNaN(parsed)) {
         setLocalMax(onUpdateTimeValue(Math.round(parsed)));
       }
     },
-    [onUpdateTimeValue, setLocalMax],
+    [setLocalMax, maxValue],
   );
 
   const handleKeyDown = useCallback(
@@ -104,12 +103,6 @@ export const PlayControls = ({
     }
   }, [time]);
 
-  useEffect(() => {
-    if (durationInputRef.current) {
-      durationInputRef.current.value = String(maxValue);
-    }
-  }, [maxValue]);
-
   return (
     <div
       className="flex items-center justify-between border-b border-r border-solid border-gray-700 px-2"
@@ -152,7 +145,7 @@ export const PlayControls = ({
           onFocus={handleFocus}
           onBlur={() => {
             if (durationInputRef.current) {
-              durationInputRef.current.value = String(maxValue);
+              durationInputRef.current.value = String(localMax);
             }
           }}
         />
