@@ -1,23 +1,18 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { MAX_VALUE, MIN_VALUE, STEP } from "./constants";
+import { useTimeline } from "./TimelineContext";
 
 type PlayControlsProps = {
-  time: number;
-  maxDuration: number;
-  onUpdateTime: (value: string) => void;
-  onUpdateMaxDuration: (value: string) => void;
   maxValue?: number;
   minValue?: number;
 };
 
 export const PlayControls = ({
-  time,
-  maxDuration,
-  onUpdateTime,
-  onUpdateMaxDuration,
   maxValue = MAX_VALUE,
   minValue = MIN_VALUE,
 }: PlayControlsProps) => {
+  const { time, maxDuration, updateTime, updateMaxDuration } = useTimeline();
+
   const currentTimeInputRef = useRef<HTMLInputElement>(null);
   const durationInputRef = useRef<HTMLInputElement>(null);
 
@@ -90,8 +85,8 @@ export const PlayControls = ({
           max={maxValue}
           step={STEP}
           defaultValue={time}
-          onChange={(e) => handleChange(e, onUpdateTime)}
-          onKeyDown={(e) => handleKeyDown(e, onUpdateTime, String(time))}
+          onChange={(e) => handleChange(e, updateTime)}
+          onKeyDown={(e) => handleKeyDown(e, updateTime, String(time))}
           onFocus={handleFocus}
           onBlur={() => {
             if (currentTimeInputRef.current) {
@@ -112,9 +107,9 @@ export const PlayControls = ({
           step={STEP}
           defaultValue={maxDuration}
           onKeyDown={(e) =>
-            handleKeyDown(e, onUpdateMaxDuration, String(maxDuration))
+            handleKeyDown(e, updateMaxDuration, String(maxDuration))
           }
-          onChange={(e) => handleChange(e, onUpdateMaxDuration)}
+          onChange={(e) => handleChange(e, updateMaxDuration)}
           onFocus={handleFocus}
           onBlur={() => {
             if (durationInputRef.current) {

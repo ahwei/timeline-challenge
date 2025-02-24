@@ -1,9 +1,6 @@
-interface RulerState {
-  maxDuration: number;
-}
-
-export const Ruler = ({ maxDuration }: RulerState) => {
-  // TODO: implement mousedown and mousemove to update time and Playhead position
+import { useTimeline } from "./TimelineContext";
+export const Ruler = () => {
+  const { maxDuration } = useTimeline();
 
   return (
     <div
