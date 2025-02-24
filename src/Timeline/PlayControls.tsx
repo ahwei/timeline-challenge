@@ -1,66 +1,25 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
+import { MAX_VALUE, MIN_VALUE, STEP } from "./constants";
 
 type PlayControlsProps = {
   time: number;
-  setTime: (time: number) => void;
+  maxDuration: number;
+  onUpdateTime: (value: string) => void;
+  onUpdateMaxDuration: (value: string) => void;
   maxValue?: number;
   minValue?: number;
 };
 
-const MAX_VALUE = 6000;
-const MIN_VALUE = 0;
-const STEP = 10;
-
-const onUpdateValue = (minValue: number, maxValue: number) => {
-  return (newValue: number) => {
-    if (newValue > maxValue) return maxValue;
-    if (newValue < minValue) return minValue;
-
-    return Math.round(newValue / 10) * 10;
-  };
-};
-
 export const PlayControls = ({
   time,
-  setTime,
+  maxDuration,
+  onUpdateTime,
+  onUpdateMaxDuration,
   maxValue = MAX_VALUE,
   minValue = MIN_VALUE,
 }: PlayControlsProps) => {
   const currentTimeInputRef = useRef<HTMLInputElement>(null);
   const durationInputRef = useRef<HTMLInputElement>(null);
-  const [localMax, setLocalMax] = useState(2000);
-
-  const onUpdateOriginTime = useCallback(
-    (newValue: string) => {
-      const parsed = Number(newValue);
-      const onUpdateTimeValue = onUpdateValue(minValue, localMax);
-
-      if (!isNaN(parsed)) {
-        setTime(onUpdateTimeValue(parsed));
-      }
-    },
-    [setTime, localMax, minValue],
-  );
-
-  const onUpdateMaxTime = useCallback(
-    (newValue: string) => {
-      const onUpdateTimeValue = onUpdateValue(100, maxValue);
-
-      const parsed = Number(newValue);
-      if (!isNaN(parsed)) {
-        const newMax = onUpdateTimeValue(parsed);
-        setLocalMax(newMax);
-
-        if (time > newMax) {
-          setTime(newMax);
-          if (currentTimeInputRef.current) {
-            currentTimeInputRef.current.value = String(time);
-          }
-        }
-      }
-    },
-    [setLocalMax, time, maxValue],
-  );
 
   const handleKeyDown = useCallback(
     (
@@ -91,19 +50,16 @@ export const PlayControls = ({
       const newValue = e.target.value;
       const inputType = (e.nativeEvent as InputEvent).inputType;
 
-      if (inputType === "stepUp" || inputType === "stepDown") {
+      if (
+        inputType === "stepUp" ||
+        inputType === "stepDown" ||
+        (inputType !== "deleteContentBackward" && inputType !== "insertText")
+      ) {
         e.target.select();
         updateFn(newValue);
-        return;
-      }
-
-      if (inputType !== "deleteContentBackward" && inputType !== "insertText") {
-        e.target.select();
-        updateFn(newValue);
-        return;
       }
     },
-    [time, onUpdateOriginTime],
+    [],
   );
 
   useEffect(() => {
@@ -114,9 +70,9 @@ export const PlayControls = ({
 
   useEffect(() => {
     if (durationInputRef.current) {
-      durationInputRef.current.value = String(localMax);
+      durationInputRef.current.value = String(maxDuration);
     }
-  }, [localMax]);
+  }, [maxDuration]);
 
   return (
     <div
@@ -134,8 +90,8 @@ export const PlayControls = ({
           max={maxValue}
           step={STEP}
           defaultValue={time}
-          onChange={(e) => handleChange(e, onUpdateOriginTime)}
-          onKeyDown={(e) => handleKeyDown(e, onUpdateOriginTime, String(time))}
+          onChange={(e) => handleChange(e, onUpdateTime)}
+          onKeyDown={(e) => handleKeyDown(e, onUpdateTime, String(time))}
           onFocus={handleFocus}
           onBlur={() => {
             if (currentTimeInputRef.current) {
@@ -154,13 +110,15 @@ export const PlayControls = ({
           min={100}
           max={maxValue}
           step={STEP}
-          defaultValue={localMax}
-          onKeyDown={(e) => handleKeyDown(e, onUpdateMaxTime, String(maxValue))}
-          onChange={(e) => handleChange(e, onUpdateMaxTime)}
+          defaultValue={maxDuration}
+          onKeyDown={(e) =>
+            handleKeyDown(e, onUpdateMaxDuration, String(maxDuration))
+          }
+          onChange={(e) => handleChange(e, onUpdateMaxDuration)}
           onFocus={handleFocus}
           onBlur={() => {
             if (durationInputRef.current) {
-              durationInputRef.current.value = String(localMax);
+              durationInputRef.current.value = String(maxDuration);
             }
           }}
         />
