@@ -108,6 +108,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
           max={MAX_VALUE}
           step={STEP}
           defaultValue={2000}
+          onFocus={handleFocus}
         />
         Duration
       </fieldset>
