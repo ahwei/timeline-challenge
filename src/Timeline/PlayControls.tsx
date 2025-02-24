@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 type PlayControlsProps = {
   time: number;
@@ -25,8 +25,7 @@ export const PlayControls = ({
   maxValue = MAX_VALUE,
   minValue = MIN_VALUE,
 }: PlayControlsProps) => {
-  const [localTime, setLocalTime] = useState<any>(0);
-  const [maxTime, setMaxTime] = useState<any>(2000);
+  const currentTimeInputRef = useRef<HTMLInputElement>(null);
   const durationInputRef = useRef<HTMLInputElement>(null);
 
   const onUpdateTimeValue = useCallback(onUpdateValue(maxValue, minValue), [
@@ -35,123 +34,60 @@ export const PlayControls = ({
   ]);
 
   const onUpdateOriginTime = useCallback(
-    (newValue: any) => {
-      if (!isNaN(Number(newValue))) {
-        setTime(onUpdateTimeValue(Math.round(newValue)));
-      } else {
-        setLocalTime(time);
+    (newValue: string) => {
+      const parsed = Number(newValue);
+      if (!isNaN(parsed)) {
+        setTime(onUpdateTimeValue(Math.round(parsed)));
       }
     },
-    [setTime, time],
+    [setTime, onUpdateTimeValue],
   );
 
   const onUpdateMaxTime = useCallback(
-    (newValue: any) => {
-      if (!isNaN(Number(newValue))) {
-        setMaxTime(onUpdateTimeValue(Math.round(newValue)));
-      } else {
+    (newValue: string) => {
+      const parsed = Number(newValue);
+      if (!isNaN(parsed)) {
+        const validated = onUpdateTimeValue(Math.round(parsed));
         if (durationInputRef.current) {
-          durationInputRef.current.value = String(maxTime);
+          durationInputRef.current.value = String(validated);
         }
       }
     },
-    [maxTime, onUpdateTimeValue],
+    [onUpdateTimeValue],
   );
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      const inputType = (e.nativeEvent as InputEvent).inputType;
-
-      if (inputType === "stepUp" || inputType === "stepDown") {
-        e.target.select();
-        setLocalTime(newValue);
-        onUpdateOriginTime(newValue);
-        return;
+  const handleKeyDown = useCallback(
+    (
+      e: React.KeyboardEvent<HTMLInputElement>,
+      updateFn: (value: string) => void,
+      originalValue: string,
+    ) => {
+      if (e.key === "Enter") {
+        updateFn(e.currentTarget.value);
+        e.currentTarget.blur();
+      } else if (e.key === "Escape") {
+        e.currentTarget.value = originalValue;
+        e.currentTarget.blur();
       }
-
-      if (inputType !== "deleteContentBackward" && inputType !== "insertText") {
-        e.target.select();
-        setLocalTime(newValue);
-        onUpdateOriginTime(newValue);
-        return;
-      }
-
-      setLocalTime(newValue);
     },
-    [setLocalTime, onUpdateOriginTime],
+    [],
   );
-
-  const handleBlur = useCallback(() => {
-    setLocalTime(time);
-  }, [time]);
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
   };
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        onUpdateOriginTime(localTime);
-        e.currentTarget.blur();
-      } else if (e.key === "Escape") {
-        setLocalTime(time);
-        e.currentTarget.blur();
-      }
-    },
-    [localTime, time, onUpdateOriginTime],
-  );
-
-  const handleMaxChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      const inputType = (e.nativeEvent as InputEvent).inputType;
-      if (inputType === "stepUp" || inputType === "stepDown") {
-        e.target.select();
-        const parsed = Number(newValue);
-        if (!isNaN(parsed)) {
-          const validated = onUpdateTimeValue(Math.round(parsed));
-          setMaxTime(validated);
-        }
-        return;
-      }
-      if (inputType !== "deleteContentBackward" && inputType !== "insertText") {
-        e.target.select();
-        const parsed = Number(newValue);
-        if (!isNaN(parsed)) {
-          const validated = onUpdateTimeValue(Math.round(parsed));
-          setMaxTime(validated);
-        }
-        return;
-      }
-
-      const parsed = Number(newValue);
-      if (isNaN(parsed) && durationInputRef.current) {
-        durationInputRef.current.value = String(maxTime);
-      }
-    },
-    [maxTime, onUpdateTimeValue],
-  );
-
-  const handleMaxKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        onUpdateMaxTime(durationInputRef.current?.value);
-        e.currentTarget.blur();
-      } else if (e.key === "Escape") {
-        if (durationInputRef.current) {
-          durationInputRef.current.value = String(maxTime);
-        }
-        e.currentTarget.blur();
-      }
-    },
-    [time, setTime, maxTime],
-  );
+  useEffect(() => {
+    if (currentTimeInputRef.current) {
+      currentTimeInputRef.current.value = String(time);
+    }
+  }, [time]);
 
   useEffect(() => {
-    setLocalTime(time);
-  }, [time]);
+    if (durationInputRef.current) {
+      durationInputRef.current.value = String(maxValue);
+    }
+  }, [maxValue]);
 
   return (
     <div
@@ -161,16 +97,15 @@ export const PlayControls = ({
       <fieldset className="flex gap-1">
         Current
         <input
+          ref={currentTimeInputRef}
           className="bg-gray-700 px-1 rounded focus:text-red-500"
           type="number"
           data-testid="current-time-input"
           min={minValue}
           max={maxValue}
           step={STEP}
-          value={localTime}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
+          defaultValue={time}
+          onKeyDown={(e) => handleKeyDown(e, onUpdateOriginTime, String(time))}
           onFocus={handleFocus}
         />
       </fieldset>
@@ -178,15 +113,14 @@ export const PlayControls = ({
       <fieldset className="flex gap-1">
         <input
           ref={durationInputRef}
-          className="bg-gray-700 px-1 rounded"
+          className="bg-gray-700 px-1 rounded focus:text-red-500"
           type="number"
           data-testid="duration-input"
           min={100}
           max={maxValue}
           step={STEP}
-          defaultValue={maxTime}
-          onChange={handleMaxChange}
-          onKeyDown={handleMaxKeyDown}
+          defaultValue={maxValue}
+          onKeyDown={(e) => handleKeyDown(e, onUpdateMaxTime, String(maxValue))}
           onFocus={handleFocus}
         />
         Duration
