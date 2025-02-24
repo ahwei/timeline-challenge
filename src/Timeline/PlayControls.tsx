@@ -15,7 +15,8 @@ const onUpdateValue = (minValue: number, maxValue: number) => {
   return (newValue: number) => {
     if (newValue > maxValue) return maxValue;
     if (newValue < minValue) return minValue;
-    return newValue;
+
+    return Math.round(newValue / 10) * 10;
   };
 };
 
@@ -35,7 +36,7 @@ export const PlayControls = ({
       const onUpdateTimeValue = onUpdateValue(minValue, localMax);
 
       if (!isNaN(parsed)) {
-        setTime(onUpdateTimeValue(Math.round(parsed)));
+        setTime(onUpdateTimeValue(parsed));
       }
     },
     [setTime, localMax, minValue],
@@ -47,7 +48,7 @@ export const PlayControls = ({
 
       const parsed = Number(newValue);
       if (!isNaN(parsed)) {
-        const newMax = onUpdateTimeValue(Math.round(parsed));
+        const newMax = onUpdateTimeValue(parsed);
         setLocalMax(newMax);
 
         if (time > newMax) {
@@ -58,7 +59,7 @@ export const PlayControls = ({
         }
       }
     },
-    [setLocalMax, maxValue],
+    [setLocalMax, time, maxValue],
   );
 
   const handleKeyDown = useCallback(
