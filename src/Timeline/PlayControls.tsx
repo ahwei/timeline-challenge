@@ -85,7 +85,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
       <fieldset className="flex gap-1">
         Current
         <input
-          className="bg-gray-700 px-1 rounded"
+          className="bg-gray-700 px-1 rounded focus:text-red-500"
           type="number"
           data-testid="current-time-input"
           min={0}
