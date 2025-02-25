@@ -29,9 +29,10 @@ export const Playhead = () => {
 
   const { offsetX, isVisible } = useMemo(() => {
     const offsetX = time - scrollLeft;
-    const absoluteX = BASE_LEFT + offsetX;
-    const isVisible = absoluteX >= 0 && absoluteX <= rulerWidth;
-    return { offsetX, absoluteX, isVisible };
+    const playheadX = BASE_LEFT + offsetX;
+    const isVisible =
+      playheadX >= BASE_LEFT && playheadX <= BASE_LEFT + rulerWidth;
+    return { offsetX, isVisible };
   }, [time, scrollLeft, rulerWidth]);
 
   return (
