@@ -14,6 +14,7 @@ describe("Timeline Integration Tests", () => {
       "duration-input",
     ) as HTMLInputElement;
     const keyframeList = screen.getByTestId("keyframe-list");
+    const trackList = screen.getByTestId("track-list");
     const timeline = screen.getByTestId("timeline");
 
     return {
@@ -22,6 +23,7 @@ describe("Timeline Integration Tests", () => {
       currentTimeInput,
       durationInput,
       keyframeList,
+      trackList,
       timeline,
       ...component,
     };
@@ -86,5 +88,25 @@ describe("Timeline Integration Tests", () => {
 
     // Check current time was adjusted
     expect(currentTimeInput.value).toBe("1500");
+  });
+
+  it("scrolling track list should synchronize with keyframe list", () => {
+    const { trackList, keyframeList } = setup();
+
+    // Scroll track list to specific vertical position
+    fireEvent.scroll(trackList, { target: { scrollTop: 120 } });
+
+    // Verify keyframe list is synchronized with vertical scroll
+    expect(keyframeList.scrollTop).toBe(120);
+  });
+
+  it("scrolling keyframe list should synchronize with track list", () => {
+    const { trackList, keyframeList } = setup();
+
+    // Scroll keyframe list to specific vertical position
+    fireEvent.scroll(keyframeList, { target: { scrollTop: 75 } });
+
+    // Verify track list is synchronized with vertical scroll
+    expect(trackList.scrollTop).toBe(75);
   });
 });
