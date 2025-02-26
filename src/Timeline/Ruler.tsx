@@ -26,7 +26,7 @@ export const Ruler = () => {
     [scrollRefs.keyframeList],
   );
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
 
     const originalBodyUserSelect = document.body.style.userSelect;
@@ -42,7 +42,7 @@ export const Ruler = () => {
     };
 
     window.addEventListener("mouseup", handleMouseUpOnce);
-  };
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {

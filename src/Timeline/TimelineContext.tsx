@@ -29,7 +29,7 @@ interface TimelineContextType {
   scrollRefs: {
     ruler: React.RefObject<HTMLDivElement>;
     keyframeList: React.RefObject<HTMLDivElement>;
-    trackList: React.RefObject<HTMLDivElement>; // 新增這行
+    trackList: React.RefObject<HTMLDivElement>;
   };
 }
 
@@ -100,7 +100,7 @@ export const TimelineProvider = ({ children }: { children: ReactNode }) => {
 
   const rulerRef = useRef<HTMLDivElement>(null);
   const keyframeListRef = useRef<HTMLDivElement>(null);
-  const trackListRef = useRef<HTMLDivElement>(null); // 新增這行
+  const trackListRef = useRef<HTMLDivElement>(null);
 
   return (
     <TimelineContext.Provider
@@ -113,7 +113,7 @@ export const TimelineProvider = ({ children }: { children: ReactNode }) => {
         scrollRefs: {
           ruler: rulerRef,
           keyframeList: keyframeListRef,
-          trackList: trackListRef, // 新增這行
+          trackList: trackListRef,
         },
       }}
     >

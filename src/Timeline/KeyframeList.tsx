@@ -1,17 +1,18 @@
+import { useCallback } from "react";
 import { Segment } from "./Segment";
 import { useTimeline } from "./TimelineContext";
 
 export const KeyframeList = () => {
   const { scrollRefs } = useTimeline();
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     if (scrollRefs.ruler.current) {
       scrollRefs.ruler.current.scrollLeft = e.currentTarget.scrollLeft;
     }
     if (scrollRefs.trackList.current) {
       scrollRefs.trackList.current.scrollTop = e.currentTarget.scrollTop;
     }
-  };
+  }, []);
 
   return (
     <div
