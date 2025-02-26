@@ -36,10 +36,8 @@ describe("KeyframeList Unit Tests", () => {
 
     const keyframeList = screen.getByTestId("keyframe-list");
 
-    // Simulate horizontal scroll
     fireEvent.scroll(keyframeList, { target: { scrollLeft: 150 } });
 
-    // Verify scrollLeft was synchronized with ruler
     expect(mockScrollRefs.ruler.current.scrollLeft).toBe(0);
   });
 
@@ -57,10 +55,8 @@ describe("KeyframeList Unit Tests", () => {
 
     const keyframeList = screen.getByTestId("keyframe-list");
 
-    // Simulate vertical scroll
     fireEvent.scroll(keyframeList, { target: { scrollTop: 120 } });
 
-    // Verify scrollTop was synchronized with track list
     expect(mockScrollRefs.trackList.current.scrollTop).toBe(0);
   });
 
@@ -71,11 +67,7 @@ describe("KeyframeList Unit Tests", () => {
       </TimelineProvider>,
     );
 
-    // Verify segments are rendered
     const segments = screen.getAllByTestId("segment");
     expect(segments.length).toBeGreaterThan(0);
-
-    // Note: This is a visual test that might need to be checked in integration tests
-    // as the actual DOM width depends on the CSS and style calculations
   });
 });

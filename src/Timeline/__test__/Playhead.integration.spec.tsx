@@ -21,13 +21,6 @@ describe("Playhead Integration Tests", () => {
     };
   };
 
-  // Utility function to extract translateX value from transform style
-  const getTranslateX = (element: HTMLElement): number => {
-    const transform = element.style.transform;
-    const match = transform.match(/translateX\((\d+)px\)/);
-    return match ? parseInt(match[1]) : 0;
-  };
-
   it("playhead should appear/disappear appropriately when scrolling", () => {
     const { ruler, currentTimeInput, playhead } = setup();
 
