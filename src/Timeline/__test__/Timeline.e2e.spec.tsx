@@ -179,7 +179,7 @@ describe("Timeline End-to-End Tests", () => {
 
     // Set up initial state for testing extreme scroll conditions
     currentTimeInput.value = "1000";
-    fireEvent.input(currentTimeInput); // 觸發 input 事件
+    fireEvent.input(currentTimeInput);
     fireEvent.keyDown(currentTimeInput, {
       key: "Enter",
       code: "Enter",
