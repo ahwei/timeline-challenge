@@ -22,7 +22,12 @@ export const PlayControls = ({
       originalValue: string,
     ) => {
       if (e.key === "Enter") {
-        updateFn(e.currentTarget.value);
+        if (e.currentTarget.value === "") {
+          e.currentTarget.value = originalValue;
+        } else {
+          updateFn(e.currentTarget.value);
+        }
+
         e.currentTarget.blur();
       } else if (e.key === "Escape") {
         e.currentTarget.value = originalValue;
@@ -44,11 +49,17 @@ export const PlayControls = ({
       const newValue = e.target.value;
       const inputType = (e.nativeEvent as InputEvent).inputType;
 
+      // Skip empty composition text
+      if (inputType === "insertCompositionText" && !newValue) {
+        return;
+      }
+
       if (
         inputType === "stepUp" ||
         inputType === "stepDown" ||
         (inputType !== "deleteContentBackward" && inputType !== "insertText")
       ) {
+        console.log("newValue", inputType, newValue);
         e.target.select();
         updateFn(newValue);
       }
