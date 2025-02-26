@@ -17,10 +17,31 @@ export const Ruler = () => {
     [maxDuration, updateTime],
   );
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (scrollRefs.keyframeList.current) {
-      scrollRefs.keyframeList.current.scrollLeft = e.currentTarget.scrollLeft;
-    }
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      if (scrollRefs.keyframeList.current) {
+        scrollRefs.keyframeList.current.scrollLeft = e.currentTarget.scrollLeft;
+      }
+    },
+    [scrollRefs.keyframeList],
+  );
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    const originalBodyUserSelect = document.body.style.userSelect;
+
+    document.body.style.userSelect = "none";
+
+    setIsDragging(true);
+
+    const handleMouseUpOnce = () => {
+      document.body.style.userSelect = originalBodyUserSelect;
+
+      window.removeEventListener("mouseup", handleMouseUpOnce);
+    };
+
+    window.addEventListener("mouseup", handleMouseUpOnce);
   };
 
   useEffect(() => {
@@ -60,7 +81,7 @@ export const Ruler = () => {
         className="h-6 rounded-md bg-white/25 cursor-pointer"
         data-testid="ruler-bar"
         onClick={(e) => handleTimeUpdate(e.clientX)}
-        onMouseDown={() => setIsDragging(true)}
+        onMouseDown={handleMouseDown}
       ></div>
     </div>
   );
