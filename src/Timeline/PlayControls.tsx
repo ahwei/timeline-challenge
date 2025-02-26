@@ -37,9 +37,9 @@ export const PlayControls = ({
     [],
   );
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
-  };
+  }, []);
 
   const handleChange = useCallback(
     (
