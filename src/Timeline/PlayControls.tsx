@@ -22,7 +22,8 @@ export const PlayControls = ({
       originalValue: string,
     ) => {
       if (e.key === "Enter") {
-        if (e.currentTarget.value === "") {
+        const newValue = e.currentTarget.value;
+        if (newValue === "" || isNaN(Number(newValue))) {
           e.currentTarget.value = originalValue;
         } else {
           updateFn(e.currentTarget.value);
