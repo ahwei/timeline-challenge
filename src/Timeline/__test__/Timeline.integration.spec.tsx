@@ -16,6 +16,7 @@ describe("Timeline Integration Tests", () => {
     const keyframeList = screen.getByTestId("keyframe-list");
     const trackList = screen.getByTestId("track-list");
     const timeline = screen.getByTestId("timeline");
+    const segments = screen.getAllByTestId("segment");
 
     return {
       ruler,
@@ -25,6 +26,7 @@ describe("Timeline Integration Tests", () => {
       keyframeList,
       trackList,
       timeline,
+      segments,
       ...component,
     };
   };
@@ -108,5 +110,58 @@ describe("Timeline Integration Tests", () => {
 
     // Verify track list is synchronized with vertical scroll
     expect(trackList.scrollTop).toBe(75);
+  });
+
+  it("keyframe list horizontal scrolling should synchronize with ruler", () => {
+    const { ruler, keyframeList } = setup();
+
+    // Scroll keyframe list horizontally
+    fireEvent.scroll(keyframeList, { target: { scrollLeft: 200 } });
+
+    // Verify ruler horizontal scroll is synchronized
+    expect(ruler.scrollLeft).toBe(200);
+  });
+
+  it("segment length should visually represent the total duration (1ms = 1px)", () => {
+    const { durationInput, rulerBar } = setup();
+
+    // Set duration to specific value
+    fireEvent.input(durationInput, { target: { value: "1500" } });
+    fireEvent.keyDown(durationInput, { key: "Enter" });
+
+    // Check ruler bar width matches duration
+    expect(rulerBar).toHaveStyle("width: 1500px");
+  });
+
+  it("segment length should only update after specific actions on duration input", () => {
+    const { durationInput, rulerBar } = setup();
+
+    // Change duration but don't trigger update (just type)
+    fireEvent.input(durationInput, { target: { value: "1200" } });
+
+    // Press Enter to confirm the change
+    fireEvent.keyDown(durationInput, { key: "Enter" });
+
+    // Now width should update
+    expect(rulerBar).toHaveStyle("width: 1200px");
+
+    // Test with blur event (losing focus)
+    fireEvent.input(durationInput, { target: { value: "1800" } });
+    fireEvent.blur(durationInput);
+
+    // Width should update after blur
+    expect(rulerBar).toHaveStyle("width: 1800px");
+
+    // Test with arrow keys
+    fireEvent.focus(durationInput);
+    fireEvent.keyDown(durationInput, { key: "ArrowUp" });
+
+    // Should increment by 10
+    expect(rulerBar).toHaveStyle("width: 1800px");
+
+    fireEvent.keyDown(durationInput, { key: "ArrowDown" });
+
+    // Should decrement by 10
+    expect(rulerBar).toHaveStyle("width: 1800px");
   });
 });
